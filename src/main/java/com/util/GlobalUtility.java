@@ -1,10 +1,14 @@
-package com.example;
+package com.util;
+
+import com.example.QuizDtls;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
+@Service("globalUtility")
 public class GlobalUtility {
 
     String endpoint = "https://opentdb.com/api.php?";
