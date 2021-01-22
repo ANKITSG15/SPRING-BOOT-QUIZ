@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@SpringBootApplication
-public class Application {
+@SpringBootApplication(scanBasePackages={"com.example","com.util"})
+public class Application  {
 
     public static void main(String[] args)
     {
@@ -13,3 +13,7 @@ public class Application {
     }
 
 }
+
+
+
+
