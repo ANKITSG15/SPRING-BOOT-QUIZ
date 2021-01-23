@@ -55,16 +55,14 @@ public class QuizInfo {
 
     protected QuizInfo(){}
 
-    public QuizInfo(long uniqId,long qId, String ques, String corectAns, String incorectAns)
+    public QuizInfo(long uniqId,long qId, String ques, String corectAns)
     {
-        //this.uniqId = uniqId;
+        this.uniqId = uniqId;
         this.qId = qId;
         this.ques = ques;
         this.corectAns = corectAns;
-        this.incorectAns = incorectAns;
+        //this.incorectAns = incorectAns;
     }
-
-
 
     public String getQues() {
         return ques;

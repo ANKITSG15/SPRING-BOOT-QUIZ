@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service("dataAccessService")
 public class DataAccessService {
@@ -21,10 +24,10 @@ public class DataAccessService {
 
         ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonOutput jsonOut = obj.readValue(output,JsonOutput.class);
-
+        System.out.print("Hello DataAccessService");
         if(Integer.parseInt(jsonOut.getResponse_code())==0)
         {
-            int totalQues = jsonOut.getResults().size();
+            //int totalQues = jsonOut.getResults().size();
 
             ArrayList<ResultOutput> results = jsonOut.getResults();
             int i=0;
@@ -32,7 +35,10 @@ public class DataAccessService {
             {
                 i++;
                 System.out.println(ro.getCorrect_answer());
-                repository.save(new QuizInfo(1091438,i,ro.getQuestion(),ro.getCorrect_answer(),ro.getType()));
+
+                repository.save(new QuizInfo(1091438,i,ro.getQuestion(),ro.getCorrect_answer()));
+
+
             }
 
         }else{
@@ -40,10 +46,28 @@ public class DataAccessService {
             System.out.println("No Questions Fetched");
         }
 
-        Optional<QuizInfo> storedResults = repository.findById(Long.valueOf(1091438)) ;
-
+        getCorrectAns(1091438);
+        System.out.println("Fetch Result");
 
 
         return  true;
+    }
+
+    public ArrayList<String> getCorrectAns(long uniqId)
+    {
+        List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).
+                filter((QuizInfo qi)->qi.getUniqId()==1091438).collect(Collectors.toList());
+
+
+
+        ArrayList<String> correctAns = new ArrayList<String>();
+
+        for(QuizInfo quiz : listInfo)
+       {
+           correctAns.add(quiz.getCorectAns());
+       }
+
+
+        return correctAns;
     }
 }

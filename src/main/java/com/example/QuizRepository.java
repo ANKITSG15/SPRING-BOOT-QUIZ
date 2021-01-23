@@ -4,9 +4,12 @@ package com.example;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository("repository")
 public interface QuizRepository extends CrudRepository<QuizInfo,Long> {
-    QuizInfo findById(long qid);
+
+    List<QuizInfo> findById(long uniqId);
 
 }

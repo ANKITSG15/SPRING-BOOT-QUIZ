@@ -2,6 +2,7 @@ package com.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.util.GlobalUtility;
+import com.util.ValidationMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @Autowired
-    QuizRepository repository;
 
     @Autowired
     GlobalUtility globalUtility;
@@ -32,15 +31,24 @@ public class HelloController {
     @RequestMapping("/hello/ques/{amount}/cat/{category}/diff/{difficulty}/type/{type}")
     public String fetchQues(@PathVariable int amount, @PathVariable int category,@PathVariable String difficulty,@PathVariable String type) throws JsonProcessingException {
 
-        //Validation is needed on each field
+        ValidationMsg msg = globalUtility.isValidation(amount, category, difficulty, type);
 
-        QuizDtls qdtls = new QuizDtls(amount,category,difficulty,type);
+        if (msg.getCode() == 1)
+        {
 
-        String response = globalUtility.hitOpenAPI(qdtls);
-        System.out.println(response);
+            QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
 
-        dataAccessService.saveToDb(response);
+            String response = globalUtility.hitOpenAPI(qdtls);
 
-        return response;
+            System.out.println(response);
+
+            dataAccessService.saveToDb(response);
+
+            return response;
+        }
+        else
+        {
+            return msg.getMessage();
+        }
     }
 }
