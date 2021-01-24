@@ -5,12 +5,15 @@ import com.util.GlobalUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 @RestController
 public class HelloController {
+
+    private ArrayList<String> correctAnswers = new ArrayList<>();
 
     @Autowired
     QuizRepository repository;
@@ -37,10 +40,27 @@ public class HelloController {
         QuizDtls qdtls = new QuizDtls(amount,category,difficulty,type);
 
         String response = globalUtility.hitOpenAPI(qdtls);
-        System.out.println(response);
+//        System.out.println(response);
 
         dataAccessService.saveToDb(response);
 
         return response;
+    }
+
+
+    @PostMapping(value = "/attemptQuiz")
+    public int attemptQuiz(@RequestBody ArrayList<String> markedAnswers)
+    {
+
+        correctAnswers = dataAccessService.getCorrectAns(1091438L);
+        if(markedAnswers.size() != correctAnswers.size())
+            return -1;
+        int score = 0;
+
+        for (int i = 0; i < markedAnswers.size(); i++) {
+            if(markedAnswers.get(i).equals(correctAnswers.get(i)))
+                score++;
+        }
+        return score;
     }
 }
