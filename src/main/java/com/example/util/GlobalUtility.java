@@ -1,13 +1,12 @@
-package com.util;
+package com.example.util;
 
-import com.example.QuizDtls;
+import com.example.dto.QuizDtls;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.util.HashMap;
 
 @Service("globalUtility")
 public class GlobalUtility {
@@ -37,8 +36,6 @@ public class GlobalUtility {
             }
             httpcon.setRequestMethod("GET");
             int code = httpcon.getResponseCode();
-
-            System.out.println("Code-"+code);
 
             if(code == HttpURLConnection.HTTP_OK)
             {

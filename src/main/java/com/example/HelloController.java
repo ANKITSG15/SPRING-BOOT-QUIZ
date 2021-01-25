@@ -1,7 +1,8 @@
 package com.example;
 
+import com.example.dto.QuizDtls;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.util.GlobalUtility;
+import com.example.util.GlobalUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class HelloController {
             log.info("fetchByQues API : field validation successful");
             QuizDtls qdtls = new QuizDtls(amount);
 
-            String response = globalUtility.hitOpenAPI(qdtls,4);
+            String response = globalUtility.hitOpenAPI(qdtls,1);
 
             System.out.println(response);
 
@@ -94,6 +95,14 @@ public class HelloController {
 
         log.info("Up and Running");
         return "invalid URL";
+    }
+
+    @PostMapping("/hello/login")
+    public @ResponseBody String addNewUser(@RequestParam String name,@RequestParam String email)
+    {
+
+
+        return "Hiiii";
     }
 
 }

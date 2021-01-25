@@ -1,16 +1,16 @@
 package com.example;
 
+import com.example.repository.QuizRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.util.JsonOutput;
-import com.util.ResultOutput;
+import com.example.dto.JsonOutput;
+import com.example.dto.ResultOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,7 +33,7 @@ public class DataAccessService {
             for(ResultOutput ro : results)
             {
                 i++;
-                System.out.println(ro.getCorrect_answer());
+                //System.out.println(ro.getCorrect_answer());
 
                 repository.save(new QuizInfo(1091438L,i,ro.getQuestion(),ro.getCorrect_answer()));
             }
