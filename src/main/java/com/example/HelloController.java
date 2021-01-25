@@ -15,9 +15,6 @@ public class HelloController {
     ArrayList<String> correctAnswers = new ArrayList<>();
 
     @Autowired
-    QuizRepository repository;
-
-    @Autowired
     GlobalUtility globalUtility;
 
     @Autowired
@@ -28,25 +25,32 @@ public class HelloController {
     @RequestMapping("/hello")
     public String index()
     {
-        return "Hi I am Ankit";
+        log.info("Up and Running");
+        return "Up and Running";
     }
 
     @RequestMapping("/hello/ques/{amount}/cat/{category}/diff/{difficulty}/type/{type}")
     public String fetchQues(@PathVariable int amount, @PathVariable int category,@PathVariable String difficulty,@PathVariable String type) throws JsonProcessingException {
 
+        log.info("fetchQues API called");
+
         if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
             globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag())
         {
+            log.info("fetchQues API : fields are validated successfully");
             QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
 
             String response = globalUtility.hitOpenAPI(qdtls,4);
 
             dataAccessService.saveToDb(response);
 
+            log.info("fetchQues API : fields are validated successfully");
+
             return response;
         }
         else
         {
+            log.info("invalid url");
             return "invalid url";
         }
     }
@@ -70,8 +74,11 @@ public class HelloController {
 
     @RequestMapping("/hello/ques/{amount}")
     public String fetchByQues(@PathVariable int amount) throws JsonProcessingException {
+        log.info("fetchByQues API called");
+
         if(globalUtility.isValidAmount(amount).isFlag())
         {
+            log.info("fetchByQues API : field validation successful");
             QuizDtls qdtls = new QuizDtls(amount);
 
             String response = globalUtility.hitOpenAPI(qdtls,4);
@@ -80,10 +87,12 @@ public class HelloController {
 
             dataAccessService.saveToDb(response);
 
+            log.info("fetchByQues API : success");
             return response;
 
         }
 
+        log.info("Up and Running");
         return "invalid URL";
     }
 
