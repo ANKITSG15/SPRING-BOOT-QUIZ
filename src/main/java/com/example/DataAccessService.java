@@ -24,6 +24,7 @@ public class DataAccessService {
 
         ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonOutput jsonOut = obj.readValue(output,JsonOutput.class);
+//        System.out.println("Hello DataAccessService");
         System.out.print("Hello DataAccessService");
         if(Integer.parseInt(jsonOut.getResponse_code())==0)
         {
@@ -36,9 +37,7 @@ public class DataAccessService {
                 i++;
                 System.out.println(ro.getCorrect_answer());
 
-                repository.save(new QuizInfo(1091438,i,ro.getQuestion(),ro.getCorrect_answer()));
-
-
+                repository.save(new QuizInfo(1091438L,i,ro.getQuestion(),ro.getCorrect_answer()));
             }
 
         }else{
@@ -46,6 +45,10 @@ public class DataAccessService {
             System.out.println("No Questions Fetched");
         }
 
+        // Optional<QuizInfo> storedResults = repository.findById(Long.valueOf(1091438)) ;
+        //List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).collect(Collectors.toList());
+        getCorrectAns(1091438L);
+//        System.out.println("Fetch Result");
         getCorrectAns(1091438);
         System.out.println("Fetch Result");
 
@@ -56,17 +59,16 @@ public class DataAccessService {
     public ArrayList<String> getCorrectAns(long uniqId)
     {
         List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).
-                filter((QuizInfo qi)->qi.getUniqId()==1091438).collect(Collectors.toList());
+                filter((QuizInfo qi)->qi.getUniqId()==1091438L).collect(Collectors.toList());
 
 
 
         ArrayList<String> correctAns = new ArrayList<String>();
 
         for(QuizInfo quiz : listInfo)
-       {
-           correctAns.add(quiz.getCorectAns());
-       }
-
+        {
+            correctAns.add(quiz.getCorectAns());
+        }
 
         return correctAns;
     }

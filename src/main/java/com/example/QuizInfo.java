@@ -64,6 +64,8 @@ public class QuizInfo {
         //this.incorectAns = incorectAns;
     }
 
+
+
     public String getQues() {
         return ques;
     }
