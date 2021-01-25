@@ -12,13 +12,18 @@ public class QuizInfo {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long qId;
     private Long uniqId;
+    private String ques;
+    private String corectAns;
 
-    public Long getqId() {
-        return qId;
-    }
 
-    public void setqId(Long qId) {
+    protected QuizInfo(){}
+
+    public QuizInfo(long uniqId,long qId, String ques, String corectAns)
+    {
+        this.uniqId = uniqId;
         this.qId = qId;
+        this.ques = ques;
+        this.corectAns = corectAns;
     }
 
     public Long getUniqId() {
@@ -26,49 +31,7 @@ public class QuizInfo {
         return 1091438L;
     }
 
-    public void setUniqId(Long uniqId) {
-        this.uniqId = uniqId;
-    }
-
-    public void setQues(String ques) {
-        this.ques = ques;
-    }
-
     public String getCorectAns() {
         return corectAns;
     }
-
-    public void setCorectAns(String corectAns) {
-        this.corectAns = corectAns;
-    }
-
-    public String getIncorectAns() {
-        return incorectAns;
-    }
-
-    public void setIncorectAns(String incorectAns) {
-        this.incorectAns = incorectAns;
-    }
-
-    private String ques;
-    private String corectAns;
-    private String incorectAns;
-
-    protected QuizInfo(){}
-
-    public QuizInfo(long uniqId,long qId, String ques, String corectAns)
-    {
-        //this.uniqId = uniqId;
-        this.qId = qId;
-        this.ques = ques;
-        this.corectAns = corectAns;
-    }
-
-
-
-    public String getQues() {
-        return ques;
-    }
-
-
 }
