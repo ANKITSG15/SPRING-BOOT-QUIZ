@@ -9,10 +9,12 @@ public class ValidationMsg {
 
     private int code;
     private String message;
+    private boolean flag;
 
-    ValidationMsg(int code,String message)
+    ValidationMsg(int code,String message,boolean flag)
     {
         this.code = code;
         this.message = message;
+        this.flag = flag;
     }
 }

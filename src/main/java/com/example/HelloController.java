@@ -5,14 +5,14 @@ import com.util.GlobalUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 public class HelloController {
 
-    private ArrayList<String> correctAnswers = new ArrayList<>();
+    ArrayList<String> correctAnswers = new ArrayList<>();
 
     @Autowired
     QuizRepository repository;
@@ -34,14 +34,13 @@ public class HelloController {
     @RequestMapping("/hello/ques/{amount}/cat/{category}/diff/{difficulty}/type/{type}")
     public String fetchQues(@PathVariable int amount, @PathVariable int category,@PathVariable String difficulty,@PathVariable String type) throws JsonProcessingException {
 
-        ValidationMsg msg = globalUtility.isValidation(amount, category, difficulty, type);
-
-        if (msg.getCode() == 1)
+        if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
+            globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag())
         {
 
             QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
 
-            String response = globalUtility.hitOpenAPI(qdtls);
+            String response = globalUtility.hitOpenAPI(qdtls,4);
 
             System.out.println(response);
 
@@ -51,7 +50,7 @@ public class HelloController {
         }
         else
         {
-            return msg.getMessage();
+            return "invalid url";
         }
     }
 

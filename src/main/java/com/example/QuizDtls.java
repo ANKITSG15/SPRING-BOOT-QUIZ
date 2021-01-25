@@ -13,7 +13,6 @@ public class QuizDtls {
     private String difficulty;
     private String type;
 
-
     public QuizDtls(int amount, int category, String difficulty, String type) //@ReqAllArgs, @AllArgs
     {
         this.amount = amount;
@@ -21,11 +20,8 @@ public class QuizDtls {
         this.difficulty = difficulty;
         this.type = type;
     }
-    public QuizDtls(int amount, int category, String difficulty) //@ReqAllArgs, @AllArgs
+    public QuizDtls(int amount)
     {
         this.amount = amount;
-        this.category = category;
-        this.difficulty = difficulty;
-
     }
 }

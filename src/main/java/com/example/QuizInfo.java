@@ -22,7 +22,8 @@ public class QuizInfo {
     }
 
     public Long getUniqId() {
-        return uniqId;
+//        return uniqId;
+        return 1091438L;
     }
 
     public void setUniqId(Long uniqId) {
@@ -57,11 +58,10 @@ public class QuizInfo {
 
     public QuizInfo(long uniqId,long qId, String ques, String corectAns)
     {
-        this.uniqId = uniqId;
+        //this.uniqId = uniqId;
         this.qId = qId;
         this.ques = ques;
         this.corectAns = corectAns;
-        //this.incorectAns = incorectAns;
     }
 
 

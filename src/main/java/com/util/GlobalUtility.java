@@ -14,13 +14,20 @@ public class GlobalUtility {
 
     String endpoint = "https://opentdb.com/api.php?";
     String response = null;
-    public String hitOpenAPI(QuizDtls quiz)
+    public String hitOpenAPI(QuizDtls quiz,int param)
     {
         String readLine = null;
+        URL getUrl = null;
         try {
 
-            URL getUrl = new URL(endpoint+"amount="+quiz.getAmount()+"&category="+quiz.getCategory()+"&difficulty="+quiz.getDifficulty());
-            System.out.println(endpoint+"amount="+quiz.getAmount()+"&category="+quiz.getCategory()+"&difficulty="+quiz.getDifficulty());
+            if(param ==4)
+                getUrl = new URL(endpoint+"amount="+quiz.getAmount()+"&category="+quiz.getCategory()+"&difficulty="+quiz.getDifficulty());
+
+            if(param ==1)
+                getUrl = new URL(endpoint+"amount="+quiz.getAmount());
+
+
+            System.out.println(getUrl.getQuery()+" "+getUrl.getFile());
 
             HttpURLConnection httpcon = null;
             try {
@@ -57,54 +64,41 @@ public class GlobalUtility {
         return response;
     }
 
-    public ValidationMsg isValidation(int qno, int cat, String diff, String type)
+    public ValidationMsg isValidAmount(int qno)
     {
-        int count =4;
         if(qno>10 || qno<1)
         {
 
-           return new ValidationMsg(-1,"Number of questions should be in between 1 to 10");
+            return new ValidationMsg(-1,"Number of questions should be in between 1 to 10",false);
         }
-        else
-        {
-            count--;
-        }
+        return new ValidationMsg(1,"Success",true);
+    }
 
-        if((cat>8 && cat <33) || cat<0 || cat>32 )
+    public ValidationMsg isValidCat(int cat)
+    {
+        if((cat==0) || (cat>8 &&  cat<33))
         {
-            return new ValidationMsg(-1,"Invalid Category");
+            return new ValidationMsg(1,"Success",true);
         }
-        else
-        {
-            count--;
-        }
+        return new ValidationMsg(-1,"Invalid Category",false);
+    }
 
+    public ValidationMsg isValidDiffLevel(String diff)
+    {
         if(diff.equalsIgnoreCase("medium")||diff.equalsIgnoreCase("easy")||diff.equalsIgnoreCase("hard"))
         {
-            count--;
+            return new ValidationMsg(1,"Success",true);
         }
-        else
-        {
-            return new ValidationMsg(-1,"Invalid Difficulty Level");
-        }
+        return new ValidationMsg(-1,"Invalid Category",false);
+    }
+
+    public ValidationMsg isValidType(String type)
+    {
         if(type.equalsIgnoreCase("boolean")|| type.equalsIgnoreCase("multiple"))
         {
-            return new ValidationMsg(-1,"Invalid Type");
+            return new ValidationMsg(1,"Success",true);
         }
-        else
-        {
-            count--;
-        }
-
-        if(count==0)
-        {
-            return new ValidationMsg(1,"Success");
-        }
-        else
-        {
-            return new ValidationMsg(-1,"Failure");
-        }
-
+        return new ValidationMsg(-1,"Invalid Type",false);
     }
 
 }
