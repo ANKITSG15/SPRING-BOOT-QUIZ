@@ -20,12 +20,13 @@ public class DataAccessService {
     @Autowired
     QuizRepository repository;
 
-    public boolean saveToDb(String output) throws JsonProcessingException {
+    public boolean saveToDb(String output) throws JsonProcessingException
+    {
 
         ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonOutput jsonOut = obj.readValue(output,JsonOutput.class);
 //        System.out.println("Hello DataAccessService");
-        System.out.print("Hello DataAccessService");
+//        System.out.println("Hello DataAccessService");
         if(Integer.parseInt(jsonOut.getResponse_code())==0)
         {
             //int totalQues = jsonOut.getResults().size();
@@ -49,8 +50,10 @@ public class DataAccessService {
         //List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).collect(Collectors.toList());
         getCorrectAns(1091438L);
 //        System.out.println("Fetch Result");
-        getCorrectAns(1091438);
-        System.out.println("Fetch Result");
+        // Optional<QuizInfo> storedResults = repository.findById(Long.valueOf(1091438)) ;
+        //List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).collect(Collectors.toList());
+        getCorrectAns(1091438L);
+//        System.out.println("Fetch Result");
 
 
         return  true;
