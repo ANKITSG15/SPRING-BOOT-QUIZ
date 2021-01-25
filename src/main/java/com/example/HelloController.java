@@ -37,14 +37,11 @@ public class HelloController {
         if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
             globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag())
         {
-
             QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
 
             String response = globalUtility.hitOpenAPI(qdtls,4);
 
-            System.out.println(response);
-
-        dataAccessService.saveToDb(response);
+            dataAccessService.saveToDb(response);
 
             return response;
         }
