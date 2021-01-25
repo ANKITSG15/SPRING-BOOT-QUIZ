@@ -70,4 +70,24 @@ public class HelloController {
         }
         return score;
     }
+
+    @RequestMapping("/hello/ques/{amount}")
+    public String fetchByQues(@PathVariable int amount) throws JsonProcessingException {
+        if(globalUtility.isValidAmount(amount).isFlag())
+        {
+            QuizDtls qdtls = new QuizDtls(amount);
+
+            String response = globalUtility.hitOpenAPI(qdtls,4);
+
+            System.out.println(response);
+
+            dataAccessService.saveToDb(response);
+
+            return response;
+
+        }
+
+        return "invalid URL";
+    }
+
 }
