@@ -13,15 +13,14 @@ public class QuizDtls {
     private String difficulty;
     private String type;
 
-    public QuizDtls(int amount, int category, String difficulty, String type) //@ReqAllArgs, @AllArgs
-    {
+    public QuizDtls(int amount, int category, String difficulty, String type) {
         this.amount = amount;
         this.category = category;
         this.difficulty = difficulty;
         this.type = type;
     }
-    public QuizDtls(int amount)
-    {
+
+    public QuizDtls(int amount) {
         this.amount = amount;
     }
 }

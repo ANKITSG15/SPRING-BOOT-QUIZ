@@ -21,15 +21,15 @@ public class UserDetails {
     private Integer id;
     private String userId;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Ho_Chi_Minh")
-    private LocalDateTime dateofAttempt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
+    private LocalDateTime dateOfAttempt;
 
-    protected UserDetails(){}
+    protected UserDetails() {
+    }
 
-    public UserDetails(String userId, LocalDateTime dateTime)
-    {
+    public UserDetails(String userId, LocalDateTime dateTime) {
         this.userId = userId;
-        this.dateofAttempt = dateTime;
+        this.dateOfAttempt = dateTime;
     }
 
 }

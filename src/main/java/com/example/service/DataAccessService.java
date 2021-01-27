@@ -28,55 +28,55 @@ public class DataAccessService {
     @Autowired
     UserRepository userRepository;
 
-    public boolean saveToDb(String output,String id) throws JsonProcessingException
-    {
+    public boolean saveToDb(String output, String id) throws JsonProcessingException {
 
         ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        JsonOutput jsonOut = obj.readValue(output,JsonOutput.class);
+        JsonOutput jsonOut = obj.readValue(output, JsonOutput.class);
 
-        if(Integer.parseInt(jsonOut.getResponse_code())==0)
-        {
-            userRepository.save(new UserDetails(id,LocalDateTime.now()));
-            UserDetails attemptDtls = fetchuniqueId(id);
-            ArrayList<ResultOutput> results = jsonOut.getResults();
-            int i=0;
-            for(ResultOutput ro : results)
-            {
-                i++;
-                repository.save(new QuizInfo(attemptDtls.getId(),i,ro.getQuestion(),ro.getCorrect_answer()));
+        int num = 0;
+        try {
+            num = Integer.parseInt(jsonOut.getResponseCode());
+            if (num == 0) {
+                userRepository.save(new UserDetails(id, LocalDateTime.now()));
+                UserDetails attemptDetails = fetchUniqueId(id);
+                ArrayList<ResultOutput> results = jsonOut.getResults();
+                int i = 0;
+                for (ResultOutput ro : results) {
+                    i++;
+                    repository.save(new QuizInfo(attemptDetails.getId(), i, ro.getQuestion(), ro.getCorrectAnswer()));
+                }
+
+            } else {
+
+                return false;
             }
 
-        }else{
-
-            return false;
+        } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
         }
 
-        return  true;
+        return true;
     }
 
-    public ArrayList<String> getCorrectAns(Integer uniqId)
-    {
-        List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(),false).
-                filter((QuizInfo qi)->qi.getUniqId()==uniqId).collect(Collectors.toList());
+    public List<String> getCorrectAns(Integer uniqueId) {
+        List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(), false).
+                filter((QuizInfo qi) -> qi.getUniqueId().equals(uniqueId)).collect(Collectors.toList());
+        List<String> correctAns = new ArrayList<>();
 
-        ArrayList<String> correctAns = new ArrayList<String>();
-
-        for(QuizInfo quiz : listInfo)
-        {
+        for (QuizInfo quiz : listInfo) {
             //System.out.print(quiz+" ");
-            correctAns.add(quiz.getCorectAns());
+            correctAns.add(quiz.getCorrectAns());
         }
         return correctAns;
     }
 
-    public UserDetails fetchuniqueId(String id)
-    {
-         List<UserDetails> ud = StreamSupport.stream(userRepository.findAll().spliterator(),false).
-                filter((UserDetails qi)->qi.getUserId().equalsIgnoreCase(id)).collect(Collectors.toList());
+    public UserDetails fetchUniqueId(String id) {
+        List<UserDetails> ud = StreamSupport.stream(userRepository.findAll().spliterator(), false).
+                filter((UserDetails qi) -> qi.getUserId().equalsIgnoreCase(id)).collect(Collectors.toList());
 
         UserDetails recentDetails = ud.stream().max(Comparator.comparing(UserDetails::getId)).get();
 
-        System.out.println(recentDetails.getDateofAttempt()+" "+recentDetails.getUserId()+" "+recentDetails.getId());
+        System.out.println(recentDetails.getDateOfAttempt() + " " + recentDetails.getUserId() + " " + recentDetails.getId());
 
         return recentDetails;
     }

@@ -1,36 +1,33 @@
 package com.example.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Getter
+@Setter
 public class QuizInfo {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer qId;
-    private Integer uniqId;
+    private Integer uniqueId;
     private String ques;
-    private String corectAns;
+    private String correctAns;
 
 
-    protected QuizInfo(){}
+    protected QuizInfo() {
+    }
 
-    public QuizInfo(Integer uniqId,Integer qId, String ques, String corectAns)
-    {
-        this.uniqId = uniqId;
+    public QuizInfo(Integer uniqueId, Integer qId, String ques, String correctAns) {
+        this.uniqueId = uniqueId;
         this.qId = qId;
         this.ques = ques;
-        this.corectAns = corectAns;
-    }
-
-    public Integer getUniqId() {
-        return uniqId;
-    }
-
-    public String getCorectAns() {
-        return corectAns;
+        this.correctAns = correctAns;
     }
 }

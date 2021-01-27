@@ -12,8 +12,9 @@ import javax.persistence.Id;
 public class Student {
 
     @Id
-    private String student_id;
+    private String studentId;
     private String password;
 
-    protected Student(){}
+    protected Student() {
+    }
 }

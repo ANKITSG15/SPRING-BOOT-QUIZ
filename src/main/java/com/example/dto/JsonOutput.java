@@ -10,6 +10,6 @@ import java.util.ArrayList;
 @Setter
 public class JsonOutput {
 
-    private String response_code;
+    private String responseCode;
     private ArrayList<ResultOutput> results;
 }

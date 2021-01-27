@@ -11,8 +11,7 @@ public class ValidationMsg {
     private String message;
     private boolean flag;
 
-    ValidationMsg(int code,String message,boolean flag)
-    {
+    ValidationMsg(int code, String message, boolean flag) {
         this.code = code;
         this.message = message;
         this.flag = flag;
