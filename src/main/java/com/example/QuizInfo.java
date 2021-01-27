@@ -10,15 +10,15 @@ public class QuizInfo {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long qId;
-    private Long uniqId;
+    private Integer qId;
+    private Integer uniqId;
     private String ques;
     private String corectAns;
 
 
     protected QuizInfo(){}
 
-    public QuizInfo(long uniqId,long qId, String ques, String corectAns)
+    public QuizInfo(Integer uniqId,Integer qId, String ques, String corectAns)
     {
         this.uniqId = uniqId;
         this.qId = qId;
@@ -26,9 +26,8 @@ public class QuizInfo {
         this.corectAns = corectAns;
     }
 
-    public Long getUniqId() {
-//        return uniqId;
-        return 1091438L;
+    public Integer getUniqId() {
+        return uniqId;
     }
 
     public String getCorectAns() {
