@@ -1,5 +1,7 @@
-package com.example;
+package com.example.service;
 
+import com.example.entity.QuizInfo;
+import com.example.entity.UserDetails;
 import com.example.repository.QuizRepository;
 import com.example.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,7 +9,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.dto.JsonOutput;
 import com.example.dto.ResultOutput;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,7 @@ public class DataAccessService {
          List<UserDetails> ud = StreamSupport.stream(userRepository.findAll().spliterator(),false).
                 filter((UserDetails qi)->qi.getUserId().equalsIgnoreCase(id)).collect(Collectors.toList());
 
-        UserDetails recentDetails = ud.stream().max(Comparator.comparing(UserDetails::getUserId)).get();
+        UserDetails recentDetails = ud.stream().max(Comparator.comparing(UserDetails::getId)).get();
 
         System.out.println(recentDetails.getDateofAttempt()+" "+recentDetails.getUserId()+" "+recentDetails.getId());
 

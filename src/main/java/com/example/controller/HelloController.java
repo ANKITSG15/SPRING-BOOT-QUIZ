@@ -1,8 +1,12 @@
-package com.example;
+package com.example.controller;
 
+import com.example.Application;
 import com.example.dto.InpCorrectAns;
 import com.example.dto.QuizDtls;
+import com.example.entity.Student;
+import com.example.entity.UserDetails;
 import com.example.repository.StudentRepository;
+import com.example.service.DataAccessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.util.GlobalUtility;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -90,7 +94,7 @@ public class HelloController {
         int score = 0;
 
         for (int i = 0; i < markedAnswers.size(); i++) {
-            if(markedAnswers.get(i).equals(correctAnswers.get(i)))
+            if(markedAnswers.get(i).equalsIgnoreCase(correctAnswers.get(i)))
                 score++;
         }
         return score;
@@ -126,12 +130,12 @@ public class HelloController {
     @PostMapping("/hello/login")
     public @ResponseBody String addNewUser(@RequestParam String name,@RequestParam String password)
     {
-
         List<Student> student = StreamSupport.stream(studentRepository.findAll().spliterator(),false).
                 filter((Student s)->s.getStudent_id().equals(name) && s.getPassword().equals(password)).collect(Collectors.toList());
 
         if(student.size() == 0)
             return "INVALID USER";
+
         return "SUCCESS";
     }
 }
