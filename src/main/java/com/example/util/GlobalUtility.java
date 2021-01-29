@@ -1,6 +1,9 @@
 package com.example.util;
 
 import com.example.dto.QuizDtls;
+import com.example.util.ConfigUtility;
+import org.apache.http.client.utils.URIBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -10,37 +13,40 @@ import java.net.*;
 
 @Service("globalUtility")
 public class GlobalUtility {
-
-    String endpoint = "https://opentdb.com/api.php?";
+    @Autowired
+    private ConfigUtility config;
     String response = null;
+
+    public URL buildURL(QuizDtls quiz, int param) throws URISyntaxException, MalformedURLException {
+        URIBuilder makeurl = new URIBuilder();
+        if (param == 4)
+            makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                    .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()))
+                    .setParameter(config.getProperty("endpoint.param2"), String.valueOf(quiz.getCategory()))
+                    .setParameter(config.getProperty("endpoint.param3"), quiz.getDifficulty())
+                    .setParameter(config.getProperty("endpoint.param4"), quiz.getType());
+
+        if (param == 1)
+            makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host"))
+                    .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()));
+        System.out.println(makeurl.toString());
+        return makeurl.build().toURL();
+    }
 
     public String hitOpenAPI(QuizDtls quiz, int param) {
         String readLine = null;
         URL getUrl = null;
         try {
-
-            if (param == 4)
-                getUrl = new URL(endpoint + "amount=" + quiz.getAmount() +
-                        "&category=" + quiz.getCategory() +
-                        "&difficulty=" + quiz.getDifficulty());
-
-            if (param == 1)
-                getUrl = new URL(endpoint + "amount=" + quiz.getAmount());
-
-
-            assert getUrl != null;
-            System.out.println(getUrl.getQuery() + " " + getUrl.getFile());
-
+            getUrl = buildURL(quiz, param);
             HttpURLConnection httpcon = null;
             try {
                 httpcon = (HttpURLConnection) getUrl.openConnection();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            assert httpcon != null;
+            //assert httpcon != null;
             httpcon.setRequestMethod("GET");
             int code = httpcon.getResponseCode();
-
             if (code == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(httpcon.getInputStream()));
                 StringBuffer json = new StringBuffer();
@@ -53,7 +59,7 @@ public class GlobalUtility {
                 System.out.println("Error in getting response");
             }
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
         return response;
@@ -61,7 +67,6 @@ public class GlobalUtility {
 
     public ValidationMsg isValidAmount(int qno) {
         if (qno > 10 || qno < 1) {
-
             return new ValidationMsg(-1, "Number of questions should be in between 1 to 10", false);
         }
         return new ValidationMsg(1, "Success", true);
@@ -87,5 +92,4 @@ public class GlobalUtility {
         }
         return new ValidationMsg(-1, "Invalid Type", false);
     }
-
 }

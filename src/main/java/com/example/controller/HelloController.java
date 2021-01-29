@@ -24,25 +24,19 @@ import java.util.stream.StreamSupport;
 
 @RestController
 public class HelloController {
-
     List<String> correctAnswers = new ArrayList<>();
-
     @Autowired
-    StudentRepository studentRepository;
-
+    private StudentRepository studentRepository;
     @Autowired
-    GlobalUtility globalUtility;
-
+    private GlobalUtility globalUtility;
     @Autowired
-    DataAccessService dataAccessService;
-
+    private DataAccessService dataAccessService;
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @RequestMapping("/hello")
     public String index() {
         return "Up and Running";
     }
-
     @RequestMapping(value = "/fetchQues")
     public String fetchQues(@RequestParam String id,
                             @RequestParam int amount,
@@ -51,17 +45,12 @@ public class HelloController {
                             @RequestParam String type)
             throws JsonProcessingException {
 
-        System.out.println("fetchQues Called");
-
         log.info("fetchQues API called");
-
         if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
                 globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag()) {
             log.info("fetchQues API : fields are validated successfully");
             QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
-
             String response = globalUtility.hitOpenAPI(qdtls, 4);
-
             if (dataAccessService.saveToDb(response, id)) {
                 log.info("fetchQues API : Questions are saved successfully");
                 return response;
@@ -75,24 +64,17 @@ public class HelloController {
         }
     }
 
-
     @PostMapping(value = "/attemptQuiz", consumes = MediaType.APPLICATION_JSON_VALUE)
     public int attemptQuiz(@RequestBody String ans) throws JsonProcessingException {
 
         ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         InpCorrectAns jsonOut = obj.readValue(ans, InpCorrectAns.class);
-
         List<String> markedAnswers = jsonOut.getMarkedAnswers();
-
         UserDetails usr = dataAccessService.fetchUniqueId(jsonOut.getStdId());
-
         correctAnswers = dataAccessService.getCorrectAns(usr.getId());
-
         if (markedAnswers.size() != correctAnswers.size())
             return -1;
-
         int score = 0;
-
         for (int i = 0; i < markedAnswers.size(); i++) {
             if (markedAnswers.get(i).equalsIgnoreCase(correctAnswers.get(i)))
                 score++;
@@ -103,16 +85,13 @@ public class HelloController {
     @RequestMapping("/fetchByQues")
     public String fetchByQues(@RequestParam String id,
                               @RequestParam Integer amount) throws JsonProcessingException {
-        System.out.println("fetchByQues API called");
-        System.out.println("id : " + id);
-        System.out.println("amount : " + amount);
-
+        log.info("fetchByQues API called");
+        log.info("id : " + id);
+        log.info("amount : " + amount);
         if (globalUtility.isValidAmount(amount).isFlag()) {
             log.info("fetchByQues API : field validation successful");
             QuizDtls qdtls = new QuizDtls(amount);
-
             String response = globalUtility.hitOpenAPI(qdtls, 1);
-
             if (dataAccessService.saveToDb(response, id)) {
                 log.info("fetchQues API : Questions are saved successfully");
                 return response;
@@ -120,9 +99,7 @@ public class HelloController {
                 log.info("invalid url");
                 return "Invalid response code : Check the url and pass the valid inputs";
             }
-
         }
-
         log.info("Check the url and pass the valid inputs");
         return "invalid URL";
     }
@@ -132,10 +109,8 @@ public class HelloController {
     String addNewUser(@RequestParam String name, String password) {
         List<Student> student = StreamSupport.stream(studentRepository.findAll().spliterator(), false).
                 filter((Student s) -> s.getStudentId().equals(name) && s.getPassword().equals(password)).collect(Collectors.toList());
-
         if (student.size() == 0)
             return "INVALID USER";
-
         return "SUCCESS";
     }
 }
