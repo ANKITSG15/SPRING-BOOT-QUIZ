@@ -9,6 +9,7 @@ import com.example.util.ConfigUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@AllArgsConstructor
 @Service("dataAccessService")
 public class DataAccessService {
     @Autowired
-    private ConfigUtility config;
+    private final ConfigUtility config;
     @Autowired
-    private QuizRepository repository;
+    private final QuizRepository repository;
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @SneakyThrows
     public APIResponse fetchValFromJSON(String response) {
