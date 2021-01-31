@@ -37,6 +37,7 @@ public class HelloController {
     public String index() {
         return "Up and Running";
     }
+
     @RequestMapping(value = "/fetchQues")
     public String fetchQues(@RequestParam String id,
                             @RequestParam int amount,
@@ -86,8 +87,6 @@ public class HelloController {
     public String fetchByQues(@RequestParam String id,
                               @RequestParam Integer amount) throws JsonProcessingException {
         log.info("fetchByQues API called");
-        log.info("id : " + id);
-        log.info("amount : " + amount);
         if (globalUtility.isValidAmount(amount).isFlag()) {
             log.info("fetchByQues API : field validation successful");
             QuizDtls qdtls = new QuizDtls(amount);
