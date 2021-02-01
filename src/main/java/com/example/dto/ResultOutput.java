@@ -13,7 +13,7 @@ public class ResultOutput {
     private String type;
     private String difficulty;
     private String question;
-    private String correctAnswer;
-    private ArrayList<String> incorrectAnswers;
+    private String correct_answer;
+    private ArrayList<String> incorrect_answers;
 
 }

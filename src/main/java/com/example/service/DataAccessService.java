@@ -35,7 +35,7 @@ public class DataAccessService {
 
         int num = 0;
         try {
-            num = Integer.parseInt(jsonOut.getResponseCode());
+            num = Integer.parseInt(jsonOut.getResponse_code());
             if (num == 0) {
                 userRepository.save(new UserDetails(id, LocalDateTime.now()));
                 UserDetails attemptDetails = fetchUniqueId(id);
@@ -43,7 +43,7 @@ public class DataAccessService {
                 int i = 0;
                 for (ResultOutput ro : results) {
                     i++;
-                    repository.save(new QuizInfo(attemptDetails.getId(), i, ro.getQuestion(), ro.getCorrectAnswer()));
+                    repository.save(new QuizInfo(attemptDetails.getId(), i, ro.getQuestion(), ro.getCorrect_answer()));
                 }
 
             } else {

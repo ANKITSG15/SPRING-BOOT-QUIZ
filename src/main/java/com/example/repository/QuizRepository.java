@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("repository")
-public interface QuizRepository extends CrudRepository<QuizInfo, Long> {
+public interface QuizRepository extends CrudRepository<QuizInfo, Integer> {
     List<QuizInfo> findById(long uniqueId);
 }

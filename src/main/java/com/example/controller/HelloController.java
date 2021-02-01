@@ -6,6 +6,7 @@ import com.example.dto.QuizDtls;
 import com.example.entity.Student;
 import com.example.entity.UserDetails;
 import com.example.repository.StudentRepository;
+import com.example.service.CalculateScore;
 import com.example.service.DataAccessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.util.GlobalUtility;
@@ -26,6 +27,9 @@ import java.util.stream.StreamSupport;
 public class HelloController {
 
     List<String> correctAnswers = new ArrayList<>();
+
+    @Autowired
+    CalculateScore calculateScore;
 
     @Autowired
     StudentRepository studentRepository;
@@ -79,25 +83,7 @@ public class HelloController {
     @PostMapping(value = "/attemptQuiz", consumes = MediaType.APPLICATION_JSON_VALUE)
     public int attemptQuiz(@RequestBody String ans) throws JsonProcessingException {
 
-        ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        InpCorrectAns jsonOut = obj.readValue(ans, InpCorrectAns.class);
-
-        List<String> markedAnswers = jsonOut.getMarkedAnswers();
-
-        UserDetails usr = dataAccessService.fetchUniqueId(jsonOut.getStdId());
-
-        correctAnswers = dataAccessService.getCorrectAns(usr.getId());
-
-        if (markedAnswers.size() != correctAnswers.size())
-            return -1;
-
-        int score = 0;
-
-        for (int i = 0; i < markedAnswers.size(); i++) {
-            if (markedAnswers.get(i).equalsIgnoreCase(correctAnswers.get(i)))
-                score++;
-        }
-        return score;
+        return calculateScore.TestScore(correctAnswers, ans);
     }
 
     @RequestMapping("/fetchByQues")
