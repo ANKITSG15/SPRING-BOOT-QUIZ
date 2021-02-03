@@ -6,11 +6,9 @@ import com.example.repository.QuizRepository;
 import com.example.repository.UserRepository;
 import com.example.util.APIResponse;
 import com.example.util.ConfigUtility;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -31,54 +29,75 @@ public class DataAccessService {
     @Autowired
     private final UserRepository userRepository;
 
-    @SneakyThrows
-    public APIResponse fetchValFromJSON(String response) {
-        ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        APIResponse t = obj.readValue(response, APIResponse.class);
-        System.out.println(t.getResults() + " " + t.getResponse_code());
+    public APIResponse fetchValFromJSON(String response) throws Exception {
+        APIResponse t ;
+        try{
+            ObjectMapper obj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            t = obj.readValue(response, APIResponse.class);
+        }catch(Exception ex){
+            throw new Exception();
+        }
         return t;
     }
 
-    public boolean saveToDb(String output, String id) throws JsonProcessingException {
-        APIResponse jsonOut = fetchValFromJSON(output);
+    public boolean saveQuestions(String output, String id) throws Exception {
+        APIResponse jsonOut;
+        UserDetails attemptDetails = null;
         Integer num;
         try {
+            jsonOut = fetchValFromJSON(output);
             num = (Integer) jsonOut.getResponse_code();
             if (num == 0) {
-                userRepository.save(new UserDetails(id, LocalDateTime.now()));
-                UserDetails attemptDetails = fetchUniqueId(id);
+                if (userRepository.save(new UserDetails(id, LocalDateTime.now())) != null)
+                    attemptDetails = fetchUniqueId(id);
                 List<Map<String, String>> results = (List<Map<String, String>>) jsonOut.getResults();
-                int i = 0;
-                for (Map<String, String> ro : results) {
-                    i++;
-                    repository.save(new QuizInfo(attemptDetails.getId(), i,
-                            ro.get(config.getProperty("endpoint.results.question")),
-                            ro.get(config.getProperty("endpoint.results.correctans"))));
+                if (results != null && attemptDetails != null) {
+                    int i = 0;
+                    for (Map<String, String> ro : results) {
+                        i++;
+                        repository.save(new QuizInfo(attemptDetails.getId(), i,
+                                ro.get(config.getProperty("endpoint.results.question")),
+                                ro.get(config.getProperty("endpoint.results.correctans"))));
+                    }
+                }else{
+                    return false;
                 }
             } else {
                 return false;
             }
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        } catch (Exception ex) {
+            throw new Exception();
         }
         return true;
     }
 
-    public List<String> getCorrectAns(Integer uniqueId) {
-        List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(), false).
-                filter((QuizInfo qi) -> qi.getUniqueId().equals(uniqueId)).collect(Collectors.toList());
-        List<String> correctAns = new ArrayList<>();
-        for (QuizInfo quiz : listInfo) {
-            correctAns.add(quiz.getCorrectAns());
+    public List<String> getCorrectAns(Integer uniqueId) throws Exception {
+        List<String> correctAns;
+        try {
+            List<QuizInfo> listInfo = StreamSupport.stream(repository.findAll().spliterator(), false).
+                    filter((QuizInfo qi) -> qi.getUniqueId().equals(uniqueId)).collect(Collectors.toList());
+            correctAns = new ArrayList<>();
+            if (listInfo.size() == 0) {
+                for (QuizInfo quiz : listInfo) {
+                    correctAns.add(quiz.getCorrectAns());
+                }
+            }
+        } catch (Exception ex) {
+            throw new Exception();
         }
         return correctAns;
     }
 
-    public UserDetails fetchUniqueId(String id) {
-        List<UserDetails> ud = StreamSupport.stream(userRepository.findAll().spliterator(), false).
-                filter((UserDetails qi) -> qi.getUserId().equalsIgnoreCase(id)).collect(Collectors.toList());
-        UserDetails recentDetails = ud.stream().max(Comparator.comparing(UserDetails::getId)).get();
-        System.out.println(recentDetails.getDateOfAttempt() + " " + recentDetails.getUserId() + " " + recentDetails.getId());
+    public UserDetails fetchUniqueId(String id) throws Exception {
+        UserDetails recentDetails = null;
+        try {
+            List<UserDetails> ud = StreamSupport.stream(userRepository.findAll().spliterator(), false).
+                    filter((UserDetails qi) -> qi.getUserId().equalsIgnoreCase(id)).collect(Collectors.toList());
+            if(ud.stream().max(Comparator.comparing(UserDetails::getId)).isPresent())
+                recentDetails = ud.stream().max(Comparator.comparing(UserDetails::getId)).get();
+        } catch (Exception ex) {
+            throw new Exception();
+        }
         return recentDetails;
     }
 }

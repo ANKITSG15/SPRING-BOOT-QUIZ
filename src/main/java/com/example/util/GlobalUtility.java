@@ -1,11 +1,9 @@
 package com.example.util;
 
 import com.example.dto.QuizDtls;
-import com.example.util.ConfigUtility;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,34 +15,34 @@ public class GlobalUtility {
     private ConfigUtility config;
     String response = null;
 
-    public URL buildURL(QuizDtls quiz, int param) throws URISyntaxException, MalformedURLException {
+    public URL buildURL(QuizDtls quiz, int param) throws Exception {
         URIBuilder makeurl = new URIBuilder();
-        if (param == 4)
-            makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
-                    .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()))
-                    .setParameter(config.getProperty("endpoint.param2"), String.valueOf(quiz.getCategory()))
-                    .setParameter(config.getProperty("endpoint.param3"), quiz.getDifficulty())
-                    .setParameter(config.getProperty("endpoint.param4"), quiz.getType());
+        try {
+            if (param == 4)
+                makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                        .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()))
+                        .setParameter(config.getProperty("endpoint.param2"), String.valueOf(quiz.getCategory()))
+                        .setParameter(config.getProperty("endpoint.param3"), quiz.getDifficulty())
+                        .setParameter(config.getProperty("endpoint.param4"), quiz.getType());
 
-        if (param == 1)
-            makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host"))
-                    .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()));
-        System.out.println(makeurl.toString());
+            if (param == 1)
+                makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                        .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()));
+
+        }catch(Exception ex){
+            throw new Exception();
+        }
         return makeurl.build().toURL();
     }
 
-    public String hitOpenAPI(QuizDtls quiz, int param) {
+    public String hitOpenAPI(QuizDtls quiz, int param) throws Exception {
         String readLine = null;
         URL getUrl = null;
         try {
             getUrl = buildURL(quiz, param);
             HttpURLConnection httpcon = null;
-            try {
-                httpcon = (HttpURLConnection) getUrl.openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //assert httpcon != null;
+            httpcon = (HttpURLConnection) getUrl.openConnection();
+
             httpcon.setRequestMethod("GET");
             int code = httpcon.getResponseCode();
             if (code == HttpURLConnection.HTTP_OK) {
@@ -59,10 +57,13 @@ public class GlobalUtility {
                 System.out.println("Error in getting response");
             }
 
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+        } catch (IOException | URISyntaxException  e) {
+           throw new IOException();
         }
-        return response;
+        if(response!=null)
+            return response;
+        else
+            throw new IOException();
     }
 
     public ValidationMsg isValidAmount(int qno) {

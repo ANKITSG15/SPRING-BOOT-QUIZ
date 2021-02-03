@@ -101,26 +101,7 @@ public class DataAccessServiceTest {
         Assert.assertEquals(4, t.getResponse_code());
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @SneakyThrows
     @Test
     public void getCorrectAnsTest() {
         when(repository.findAll()).thenReturn(Stream.of
@@ -131,6 +112,7 @@ public class DataAccessServiceTest {
         Assert.assertEquals(3,dataAccessService.getCorrectAns(UniqueID).size());
     }
 
+    @SneakyThrows
     @Test
     public void fetchUniqueIdTest() {
 
