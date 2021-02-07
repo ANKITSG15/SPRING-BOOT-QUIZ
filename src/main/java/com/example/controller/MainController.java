@@ -36,7 +36,7 @@ public class MainController {
                                             @RequestParam String difficulty,
                                             @RequestParam String type) throws Exception {
         log.info("fetchQues API called");
-        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type);
+        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type, 5);
 
         if (response.equals("1"))
             return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
@@ -46,8 +46,8 @@ public class MainController {
             return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping("/fetchByQues")
-    public ResponseEntity<String> fetchByQues(@RequestParam String id,
+    @RequestMapping("/fetchQuizByQues")
+    public ResponseEntity<String> fetchQuizByQues(@RequestParam String id,
                                               @RequestParam int amount) throws Exception {
 
         int category = -1;
@@ -55,7 +55,7 @@ public class MainController {
         String type = "";
 
         log.info("fetchQuizByQues API called");
-        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type);
+        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type, 1);
 
         if (response.equals("1"))
             return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
@@ -63,34 +63,63 @@ public class MainController {
             return new ResponseEntity<String>("Error in getting response from API ", HttpStatus.INTERNAL_SERVER_ERROR);
         else
             return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-//        if (globalUtility.isValidAmount(amount).isFlag()) {
-//            log.info("fetchByQues API : field validation successful");
-//            QuizDtls qdtls = new QuizDtls(amount);
-//            String response = null;
-//            try {
-//                response = globalUtility.hitOpenAPI(qdtls, 1);
-//            } catch (Exception exception) {
-//                log.error("Function : hitOpenAPI, Controller : fetchByQues - Error in getting response from API " + exception.getMessage());
-//                return new ResponseEntity<String>("Function : hitOpenAPI, Controller : fetchByQues - Error in getting response from API " + exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//            try {
-//                if (dataAccessService.saveQuestions(response, id)) {
-//                    log.info("fetchByQues API : Questions are saved successfully");
-//                    return new ResponseEntity<>(response, HttpStatus.OK);
-//                } else {
-//                    log.error("invalid url");
-//                    return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
-//                }
-//            } catch (Exception ex) {
-//                log.error("Function : saveQuestions, Controller : fetchByQues - Error in saving to database" +ex.getMessage());
-//                return new ResponseEntity<>("Function : saveQuestions, Controller : fetchByQues - Error in saving to database " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//
-//        }
-//        log.error("Check the url and pass the valid inputs");
-//        return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
+    @RequestMapping("/fetchQuizByCategory")
+    public ResponseEntity<String> fetchQuizByCategory(@RequestParam String id,
+                                                  @RequestParam int category) throws Exception {
 
+        int amount = 10;
+        String difficulty = "";
+        String type = "";
+
+        log.info("fetchQuizByCategory API called");
+        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type, 2);
+
+        if (response.equals("1"))
+            return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
+        else if (response.equals("2"))
+            return new ResponseEntity<String>("Error in getting response from API ", HttpStatus.INTERNAL_SERVER_ERROR);
+        else
+            return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping("/fetchQuizByDifficulty")
+    public ResponseEntity<String> fetchQuizByDifficulty(@RequestParam String id,
+                                                      @RequestParam String difficulty) throws Exception {
+
+        int amount = 10;
+        int category = -1;
+        String type = "";
+
+        log.info("fetchQuizByDifficulty API called");
+        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type, 3);
+
+        if (response.equals("1"))
+            return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
+        else if (response.equals("2"))
+            return new ResponseEntity<String>("Error in getting response from API ", HttpStatus.INTERNAL_SERVER_ERROR);
+        else
+            return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping("/fetchQuizByType")
+    public ResponseEntity<String> fetchQuizByType(@RequestParam String id,
+                                                      @RequestParam String type) throws Exception {
+
+        int amount = 10;
+        int category = -1;
+        String difficulty = "";
+
+        log.info("fetchQuizByType API called");
+        String response = dataAccessService.fetchQuiz(id, amount, category, difficulty, type, 4);
+
+        if (response.equals("1"))
+            return new ResponseEntity<>("Invalid response code : Check the url and pass the valid inputs", HttpStatus.BAD_REQUEST);
+        else if (response.equals("2"))
+            return new ResponseEntity<String>("Error in getting response from API ", HttpStatus.INTERNAL_SERVER_ERROR);
+        else
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(value = "/attemptQuiz", consumes = MediaType.APPLICATION_JSON_VALUE)

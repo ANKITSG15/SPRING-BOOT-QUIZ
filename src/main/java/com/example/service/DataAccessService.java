@@ -121,7 +121,7 @@ public class DataAccessService {
         return recentDetails;
     }
 
-    public String fetchQuiz(String id, int amount, int category, String difficulty, String type) {
+    public String fetchQuiz(String id, int amount, int category, String difficulty, String type, int param) {
         try {
             if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
                     globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag()) {
@@ -129,7 +129,7 @@ public class DataAccessService {
                 QuizDtls qdtls = new QuizDtls(amount, category, difficulty, type);
                 String response = null;
 
-                response = globalUtility.hitOpenAPI(qdtls, 4);
+                response = globalUtility.hitOpenAPI(qdtls, param);
                 if (response != null) {
                     if (saveQuestions(response, id)) {
                         log.info("fetchQues API : Questions are saved successfully");

@@ -19,7 +19,7 @@ public class GlobalUtility {
     public URL buildURL(QuizDtls quiz, int param) throws Exception {
         URIBuilder makeurl = new URIBuilder();
         try {
-            if (param == 4)
+            if (param == 5)
                 makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
                         .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()))
                         .setParameter(config.getProperty("endpoint.param2"), String.valueOf(quiz.getCategory()))
@@ -29,6 +29,22 @@ public class GlobalUtility {
             if (param == 1)
                 makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
                         .setParameter(config.getProperty("endpoint.param1"), String.valueOf(quiz.getAmount()));
+
+            if (param == 2)
+                makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                        .setParameter(config.getProperty("endpoint.param1"), "10")
+                        .setParameter(config.getProperty("endpoint.param2"), String.valueOf(quiz.getCategory()));
+
+            if (param == 3)
+                makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                        .setParameter(config.getProperty("endpoint.param1"), "10")
+                        .setParameter(config.getProperty("endpoint.param3"), quiz.getDifficulty());
+
+            if (param == 4)
+                makeurl.setScheme(config.getProperty("endpoint.scheme")).setHost(config.getProperty("endpoint.host")).setPath(config.getProperty("endpoint.path"))
+                        .setParameter(config.getProperty("endpoint.param1"), "10")
+                        .setParameter(config.getProperty("endpoint.param4"), quiz.getType());
+
 
         } catch (Exception ex) {
             throw new Exception();
@@ -75,21 +91,21 @@ public class GlobalUtility {
     }
 
     public ValidationMsg isValidCat(int cat) {
-        if ((cat == 0) || (cat > 8 && cat < 33)) {
+        if ((cat == -1) || (cat > 8 && cat < 33)) {
             return new ValidationMsg(1, "Success", true);
         }
         return new ValidationMsg(-1, "Invalid Category", false);
     }
 
     public ValidationMsg isValidDiffLevel(String diff) {
-        if (diff.equalsIgnoreCase("medium") || diff.equalsIgnoreCase("easy") || diff.equalsIgnoreCase("hard")) {
+        if (diff.equals("") || diff.equalsIgnoreCase("medium") || diff.equalsIgnoreCase("easy") || diff.equalsIgnoreCase("hard")) {
             return new ValidationMsg(1, "Success", true);
         }
         return new ValidationMsg(-1, "Invalid Category", false);
     }
 
     public ValidationMsg isValidType(String type) {
-        if (type.equalsIgnoreCase("boolean") || type.equalsIgnoreCase("multiple")) {
+        if (type.equals("") || type.equalsIgnoreCase("boolean") || type.equalsIgnoreCase("multiple")) {
             return new ValidationMsg(1, "Success", true);
         }
         return new ValidationMsg(-1, "Invalid Type", false);
