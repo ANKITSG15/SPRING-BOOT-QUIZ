@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 //@ExtendWith(SpringExtension.class)
 //@WebMvcTest(HelloController.class)
-public class HelloControllerTest {
+public class MainControllerTest {
     private static final String responseCodeZero = "{\"response_code\":0,\"results\":[{\"category\":\"Entertainment: Board Games\",\"type\":\"multiple\",\"difficulty\":\"easy\",\"question\":\"How many spaces are there on a standard Monopoly board?\",\"correct_answer\":\"40\",\"incorrect_answers\":[\"28\",\"55\",\"36\"]},{\"category\":\"Entertainment: Board Games\",\"type\":\"multiple\",\"difficulty\":\"easy\",\"question\":\"How many pieces are there on the board at the start of a game of chess?\",\"correct_answer\":\"32\",\"incorrect_answers\":[\"16\",\"20\",\"36\"]},{\"category\":\"Entertainment: Board Games\",\"type\":\"multiple\",\"difficulty\":\"easy\",\"question\":\"How many dots are on a single die?\",\"correct_answer\":\"21\",\"incorrect_answers\":[\"24\",\"15\",\"18\"]},{\"category\":\"Entertainment: Board Games\",\"type\":\"multiple\",\"difficulty\":\"easy\",\"question\":\"Which one of these is not a real game in the Dungeons &amp; Dragons series?\",\"correct_answer\":\"Extreme Dungeons &amp; Dragons\",\"incorrect_answers\":[\"Advanced Dungeons &amp; Dragons\",\"Dungeons &amp; Dragons 3.5th edition\",\"Advanced Dungeons &amp; Dragons 2nd edition\"]}]}";
 
     private static final String correctResponse = "{\"response_code\":0,\"results\":[{\"category\":\"General Knowledge\",\"type\":\"multiple\",\"difficulty\":\"medium\",\"question\":\"Which of the General Mills Corporation&#039;s monster cereals was the last to be released in the 1970&#039;s?\",\"correct_answer\":\"Fruit Brute\",\"incorrect_answers\":[\"Count Chocula\",\"Franken Berry\",\"Boo-Berry\"]},{\"category\":\"General Knowledge\",\"type\":\"multiple\",\"difficulty\":\"medium\",\"question\":\"What was Mountain Dew&#039;s original slogan?\",\"correct_answer\":\"Yahoo! Mountain Dew... It&#039;ll tickle your innards!\",\"incorrect_answers\":[\"Give Me A Dew\",\"Do The Dew\",\"Get&#039; that barefoot feelin&#039; drinkin&#039; Mountain Dew\"]}]}";
@@ -25,7 +25,7 @@ public class HelloControllerTest {
     private MockMvc mockMvc;
 
     @InjectMocks
-    HelloController helloController;
+    MainController helloController;
 
 
     @Test
