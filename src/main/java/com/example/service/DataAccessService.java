@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.Application;
 import com.example.dto.InpCorrectAns;
+import com.example.dto.ProfileDetails;
 import com.example.dto.QuizDtls;
 import com.example.entity.QuizInfo;
 import com.example.entity.Student;
@@ -9,31 +9,30 @@ import com.example.entity.UserDetails;
 import com.example.repository.QuizRepository;
 import com.example.repository.StudentRepository;
 import com.example.repository.UserRepository;
+import com.example.thread.ThreadService;
 import com.example.util.APIResponse;
 import com.example.util.ConfigUtility;
 import com.example.util.GlobalUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service("dataAccessService")
 public class DataAccessService {
 
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+    private static final Logger log = LoggerFactory.getLogger(DataAccessService.class);
 
     @Autowired
     private ConfigUtility config;
@@ -45,6 +44,8 @@ public class DataAccessService {
     private GlobalUtility globalUtility;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private ThreadService threadService;
 
     public DataAccessService(ConfigUtility config, QuizRepository quizRepository, UserRepository userRepository, GlobalUtility globalUtility, StudentRepository studentRepository) {
     }
@@ -123,6 +124,13 @@ public class DataAccessService {
 
     public String fetchQuiz(String id, int amount, int category, String difficulty, String type, int param) {
         try {
+            CompletableFuture<ProfileDetails> dtls = threadService.getLastAttempt(id);
+            CompletableFuture<ProfileDetails> dtls1 = threadService.getNoAttempts(id);
+
+            CompletableFuture.allOf(dtls1, dtls).join();
+            if(dtls.get().isNoLastAttempt()==true)
+                log.info(dtls.get().getDateLastAttempt() + " " + dtls1.get().getNumberOfAttempt());
+
             if (globalUtility.isValidAmount(amount).isFlag() && globalUtility.isValidCat(category).isFlag() &&
                     globalUtility.isValidDiffLevel(difficulty).isFlag() && globalUtility.isValidType(type).isFlag()) {
                 log.info("fetchQuiz API : fields are validated successfully");
